@@ -28,19 +28,17 @@ using namespace std;
 
 int main()
 {
-    cout << "Hi" << endl;
+    bool testMode = true; // true = won't actuall send messages
+    
     KeyGetter keyGetter;
     keyGetter.setValues();
-    
     string megansPhoneNumber = keyGetter.getMegansPhoneNumber();
     string twilioPhoneNumber = keyGetter.getTwilioPhoneNumber();
     
     auto twilioObj = std::make_shared<twilio::Twilio>(keyGetter.getTwilioSID(), keyGetter.getTwilioToken());
 
-    
     SendSMS sendText;
-//    sendText.sendMessage(megansPhoneNumber, twilioPhoneNumber, "Megan", "never", "neverOClock", *twilioObj);
-    cout << sendText.messageWouldSendTest(megansPhoneNumber, twilioPhoneNumber, "Megan", "never", "neverOClock", *twilioObj);
+    sendText.sendMessage(megansPhoneNumber, twilioPhoneNumber, "Megan", "never", "neverOClock", *twilioObj, testMode);
     
     return 0;
 }

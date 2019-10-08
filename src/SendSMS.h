@@ -18,8 +18,8 @@ using namespace std;
 class SendSMS{
 public:
 //    SendSMS(); // initiate twilio object
-    bool sendMessage(string toNumber, string fromNumber, string toName, string aptDate, string time, twilio::Twilio twilioObj);
-    string messageWouldSendTest(string toNumber, string fromNumber, string toName, string aptDate, string time, twilio::Twilio twilioObj); // used to avoid sending too many texts
+    bool sendMessage(string toNumber, string fromNumber, string toName, string aptDate, string time, twilio::Twilio twilioObj, bool testMode);
+
     
 };
 #endif /* SendSMS_h */
