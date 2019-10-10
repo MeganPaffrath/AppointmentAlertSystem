@@ -1,15 +1,9 @@
-//
 //  SendSMS.cpp
-//  SendText
-//
-//  Created by Megan Paffrath on 10/2/19.
-//  Copyright © 2019 Megan Paffrath. All rights reserved.
-//
+//  Created Megan Paffrath
+//  Used to send text message to patients
 
 #include <stdio.h>
 #include "SendSMS.h"
-//#include "../include/twilio.h"
-
 
 // toNumber: 0000000000 (10 digit phone number)
 // toName: Name of message reciever
@@ -31,9 +25,10 @@ bool SendSMS::sendMessage(string toNumber, string fromNumber, string toName, str
         string sentMessage = "-----\nmsg would be sent to " + toName + " at " + toNumber + ": \n";
         string message = "Hello " + toName + " you have an upcoming appointment scheduled for " + aptDate + " at " + time + ".";
         sentMessage = sentMessage + message + "\n-----\n";
-
+        
         cout << sentMessage;
         return false;
     }
 }
+
 

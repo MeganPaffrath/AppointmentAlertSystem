@@ -28,6 +28,7 @@ using namespace std;
 
 int main()
 {
+    // MESSAGE SENDING FUNCTION USE - IMPLEMENT LATER --------------------------------------------V
     bool testMode = true; // true = won't actuall send messages
     
     KeyGetter keyGetter;
@@ -40,14 +41,36 @@ int main()
     SendSMS sendText;
     sendText.sendMessage(megansPhoneNumber, twilioPhoneNumber, "Megan", "never", "neverOClock", *twilioObj, testMode);
     
-    DoublyLinkedList ourPatients;
+    // MESSAGE SENDING FUNCTION USE - END ---------------------------------------------------------^
     
-    ourPatients.appendPatient();
+    
+    // NEXT PROGRAMMER: initialize LL from text file using following funtions ----------------------V
+    DoublyLinkedList ourPatients;
+    ourPatients.initializeList("Bob", "Smith", "8937238294", "long string of apt information to be included later");
+    ourPatients.initializeList("Abby", "Jones", "3237238294", "long string of apt information to be included later");
+    ourPatients.initializeList("Anna", "Zavier", "1237238294", "long string of apt information to be included later");
     ourPatients.viewPatients();
-    ourPatients.appendPatient();
-    ourPatients.viewPatients();
-    ourPatients.appendPatient();
-    ourPatients.viewPatients();
+    
+    // DLL done being initialized from txt file ---------------------------------------------------^
+    
+    
+    
+    // USER CAN NOW MAKE CHANGES ------------------------------------- V
+    
+            ourPatients.appendPatient();
+            ourPatients.viewPatients();
+        //    ourPatients.appendPatient();
+        //    ourPatients.viewPatients();
+        //    ourPatients.appendPatient();
+        //    ourPatients.viewPatients();
+    
+    // USER IS DONE MAKING CHANGES ------------------------------------ ^
+    
+    
+    
+    // LINKED LIST IS SAVED BACK INTO TEXT FILE -------------------------------------V
+    // ..
+    // TEXT FILE DONE BEING RECREATED------------------------------------------------^
     
     return 0;
 }

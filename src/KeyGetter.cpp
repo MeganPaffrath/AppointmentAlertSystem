@@ -1,10 +1,6 @@
-//
 //  KeyGetter.cpp
-//  SendText
-//
-//  Created by Megan Paffrath on 10/2/19.
-//  Copyright © 2019 Megan Paffrath. All rights reserved.
-//
+//  Created Megan Paffrath
+//  Used to gather keys to gain ability to send messages
 
 #include <stdio.h>
 #include "KeyGetter.h"
@@ -49,3 +45,4 @@ string KeyGetter::getTwilioPhoneNumber() {
 string KeyGetter::getMegansPhoneNumber() {
     return megansPhoneNumber;
 }
+

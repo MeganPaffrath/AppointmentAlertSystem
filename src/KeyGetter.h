@@ -1,10 +1,6 @@
-//
 //  KeyGetter.h
-//  SendText
-//
-//  Created by Megan Paffrath on 10/2/19.
-//  Copyright © 2019 Megan Paffrath. All rights reserved.
-//
+//  Created Megan Paffrath
+//  Used to gather keys to gain ability to send messages
 
 #ifndef KeyGetter_h
 #define KeyGetter_h
@@ -28,3 +24,4 @@ public:
 };
 
 #endif /* KeyGetter_h */
+

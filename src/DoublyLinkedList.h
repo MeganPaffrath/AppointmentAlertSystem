@@ -12,11 +12,15 @@ using namespace std;
 
 class DoublyLinkedList {
 private:
+    struct Appointment {
+        string date;
+        string time;
+    };
     struct Patient {
         string fName;
         string lName;
         string phoneNumber;
-        int appointmentCount = 0;
+        vector<Appointment> appointments;
 //        string aptDateTime[10][10]; // { {"MM/YY", "hh:mmxm"}, ... , {"MM/YY", "hh:mmxm"} }
 //        vector<string[2]> aptDateTime;
         Patient* next;
@@ -24,6 +28,7 @@ private:
     };
     
     Patient* head;
+    Patient* tail;
     Patient* location; // used for iteration
     Patient* prevLoc;
     
@@ -32,6 +37,7 @@ public:
     ~DoublyLinkedList();
     
     // INSERT:
+    void initializeList(string fName, string lName, string phone, string apts); // appends patients w/ info as args
     void appendPatient(); // adds a patient into list in alphabetical order by last name
     
     // EDIT:
