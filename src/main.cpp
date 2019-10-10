@@ -1,10 +1,3 @@
-//
-//  main.cpp
-//  SendText
-//
-//  Created by Megan Paffrath on 10/2/19.
-//  Copyright © 2019 Megan Paffrath. All rights reserved.
-//
 
 // NEED:
 //stdio.h, stdlib.h, unistd.h - C POSIX libraries
@@ -15,14 +8,21 @@
 // Must run with curl linker
 // Xcode: https://stackoverflow.com/questions/10269343/libcurl-wont-work-xcode
 
+// Current working directory: src folder
+
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "../include/twilio.h"
+#include <vector>
+
 #include "SendSMS.h"
 #include "KeyGetter.h"
+#include "DoublyLinkedList.h"
+#include "../include/twilio.h"
+
 using namespace std;
 
 
@@ -36,10 +36,20 @@ int main()
     string twilioPhoneNumber = keyGetter.getTwilioPhoneNumber();
     
     auto twilioObj = std::make_shared<twilio::Twilio>(keyGetter.getTwilioSID(), keyGetter.getTwilioToken());
-
+    
     SendSMS sendText;
     sendText.sendMessage(megansPhoneNumber, twilioPhoneNumber, "Megan", "never", "neverOClock", *twilioObj, testMode);
     
+    DoublyLinkedList ourPatients;
+    
+    ourPatients.appendPatient();
+    ourPatients.viewPatients();
+    ourPatients.appendPatient();
+    ourPatients.viewPatients();
+    ourPatients.appendPatient();
+    ourPatients.viewPatients();
+    
     return 0;
 }
+
 
