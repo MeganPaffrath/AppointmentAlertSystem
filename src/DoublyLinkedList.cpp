@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
 #include "DoublyLinkedList.h"
 //#include <vector>
 using namespace std;
@@ -40,6 +41,7 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
 }
 void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital letters (fix)
     // Prepare new patient 'node'
+    cout << "ADD A NEW PATIENT: " << endl;
     Patient *newPatient = new Patient;
     cout << "First Name: ";
     cin >> newPatient->fName;
@@ -60,12 +62,11 @@ void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital l
     location = head;
     prevLoc = nullptr;
     while ((location != nullptr) && (newPatient->lName > location->lName)) { // next location
-        cout << newPatient->lName << " > " << location->lName << endl;
+//        cout << newPatient->lName << " > " << location->lName << endl;
         prevLoc = location;
         location = location->next;
     }
 
-    
     // Insert 'node' between prevLoc and location
     if (prevLoc == nullptr && location == nullptr) { // make only first 'node'
 //        cout << "1" << endl;
@@ -91,11 +92,61 @@ void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital l
         newPatient->prev = prevLoc;
         newPatient->next = location;
     }
+    
+//    cout << "END" <<endl;
+}
+
+DoublyLinkedList::Patient* DoublyLinkedList::findPatient() {
+    Patient* tempPatient = new Patient;
+    bool foundPatient = false;
+    
+    string lName, fName;
+    cout << "Last Name of Patient to Edit: ";
+    cin >> lName;
+    cout << "First Name of Patient to Edit: ";
+    cin >> fName;
+    
+    // serches and returns 'node'
+    location = head;
+    if (location != nullptr) {
+        while (location != nullptr) {
+            if (location->lName == lName && location->fName == fName) {
+                tempPatient = location;
+                foundPatient = true;
+            }
+            location = location->next;
+        }
+    }
+    if (!foundPatient) { // if not found set pointer to nullptr
+        tempPatient = nullptr;
+    }
+    return tempPatient;
 }
 
 // EDIT:
 void DoublyLinkedList::editAppointmentForPatient() {
+    Patient* tempPatient = findPatient();
     
+    if (tempPatient == nullptr) {
+        cout << "The Patient was not found." << endl;
+    } else {
+        cout << "Patient: " << tempPatient->fName << " " << tempPatient->lName << endl;
+    }
+    
+    Appointment *newAppointment = new Appointment;
+    cout << "Add Apt Date: ";
+    cin >> newAppointment->date;
+    cout << "Add Apt Time: ";
+    cin >> newAppointment->time;
+    
+    tempPatient->appointments.push_back(*newAppointment); // DOES NOT WORK AS EXPECTED
+    
+    for (int i = 0; i < tempPatient->appointments.size(); i++) { // this works though
+        cout << "\t\t" << tempPatient->appointments[i].date << " at " << tempPatient
+        ->appointments[i].time << endl;
+    }
+    
+    delete tempPatient; // seems to delete all appointment information for patient node like it should not do.
 }
 
 // REMOVE:
@@ -105,7 +156,7 @@ void DoublyLinkedList::removePatient() {
 
 // VIEW:
 void DoublyLinkedList::viewPatients() {
-    cout << "--- All Patients and Appointments ---\n" << endl;
+    cout << "\n--- All Patients and Appointments ---\n" << endl;
     location = head;
     if (head == nullptr) {
         cout << "List is empty" << endl;
@@ -115,11 +166,12 @@ void DoublyLinkedList::viewPatients() {
             cout << "\tPhone: " << location->phoneNumber << endl;;
             cout << "\tAppointments and times: " << endl;
             for (int i = 0; i < location->appointments.size(); i++) {
-                cout << "\t\t" << location->appointments[0].date << " at " << location->appointments[0].time << endl;
+                cout << "\t\t" << location->appointments[i].date << " at " << location->appointments[i].time << endl;
             }
             location = location->next;
         }
     }
+    cout << "-----------------------------------------\n" << endl;
 }
 
 // SORTS:
@@ -127,6 +179,47 @@ void DoublyLinkedList::viewPatients() {
 //    void dateSort(); // sort in order of upcoming appointments
 
 // TEXT:
-void DoublyLinkedList::textSender() {
+void DoublyLinkedList::textSender() { // calls texting function
+    
+}
+// File Reader:
+void DoublyLinkedList::fileReader() {
+    string line;
+    ifstream readFile("Patients.txt");
+    if (readFile.is_open()) {
+        while(getline(readFile,line)) {
+            cout << line << endl; // break up each line into inputs for initialize
+            //initializeList("Bob", "Smith", "8937238294", "long string of apt information to be included later");
+        }
+        readFile.close();
+    } else {
+        cout << "Could not read from file."; 
+    }
+}
+// File Writer:
+void DoublyLinkedList::fileWriter() {
+    
+    // Prepare & write one string per patient
+    location = head;
+    if (head == nullptr) {
+        cout << "List is empty, nothing to write" << endl;
+    } else {
+        while (location != nullptr) {
+            string appendLine;
+            appendLine = location->lName + "\t\t\t" + location->fName + "\t\t\t" + location->phoneNumber; // needs better formatting than tabs probably
+            // figure out how to implement and add location->appointments
+
+            // String of appointments:
+            for (int i = 0; i < location->appointments.size(); i++) {
+                appendLine = appendLine + location->appointments[i].date + " at " + location->appointments[i].time + " ";
+            }
+            appendLine = appendLine + "\n";
+            
+            cout << "APPENDING: " << appendLine; // idea of what will be appended
+            // APPEND LINE TO TEXT DOC HERE ----------------------------------------------------------------
+            
+            location = location->next;
+        }
+    }
     
 }

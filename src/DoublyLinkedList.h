@@ -40,6 +40,8 @@ public:
     void initializeList(string fName, string lName, string phone, string apts); // appends patients w/ info as args
     void appendPatient(); // adds a patient into list in alphabetical order by last name
     
+    DoublyLinkedList::Patient* findPatient();
+    
     // EDIT:
     void editAppointmentForPatient();
     
@@ -56,6 +58,12 @@ public:
     // TEXT:
     void textSender(); // if appointment is in 5 days, send reminder to patient
     
+    
+    // File Reader:
+    void fileReader(); // reads Patients.txt file and initializes DLL
+
+    // FILE WRITER:
+    void fileWriter(); // writes Patient list Patients.txt
     
 };
 

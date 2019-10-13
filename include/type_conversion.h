@@ -27,3 +27,4 @@ ucs2_to_utf8(std::u16string const& input)
     std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> convert;
     return convert.to_bytes(input);
 }
+

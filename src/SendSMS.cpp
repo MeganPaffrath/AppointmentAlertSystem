@@ -22,7 +22,7 @@ bool SendSMS::sendMessage(string toNumber, string fromNumber, string toName, str
         }
         return sent;
     } else {
-        string sentMessage = "-----\nmsg would be sent to " + toName + " at " + toNumber + ": \n";
+        string sentMessage = "\n-----\nmsg would be sent to " + toName + " at " + toNumber + ": \n";
         string message = "Hello " + toName + " you have an upcoming appointment scheduled for " + aptDate + " at " + time + ".";
         sentMessage = sentMessage + message + "\n-----\n";
         

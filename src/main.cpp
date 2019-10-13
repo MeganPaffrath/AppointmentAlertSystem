@@ -29,7 +29,7 @@ using namespace std;
 int main()
 {
     // MESSAGE SENDING FUNCTION USE - IMPLEMENT LATER --------------------------------------------V
-    bool testMode = true; // true = won't actuall send messages
+    bool testMode = true; // true = won't actualy send messages
     
     KeyGetter keyGetter;
     keyGetter.setValues();
@@ -45,7 +45,12 @@ int main()
     
     
     // NEXT PROGRAMMER: initialize LL from text file using following funtions ----------------------V
-    DoublyLinkedList ourPatients;
+    DoublyLinkedList ourPatients; // create DLL
+    
+    ourPatients.fileReader(); // put initializeList function within this function when you read from it plz
+    ourPatients.viewPatients(); // this should show exactly what is in txt file when you are done
+    
+    // Ex of initializeList (remove this section once fileReader is completed properly):
     ourPatients.initializeList("Bob", "Smith", "8937238294", "long string of apt information to be included later");
     ourPatients.initializeList("Abby", "Jones", "3237238294", "long string of apt information to be included later");
     ourPatients.initializeList("Anna", "Zavier", "1237238294", "long string of apt information to be included later");
@@ -54,22 +59,26 @@ int main()
     // DLL done being initialized from txt file ---------------------------------------------------^
     
     
-    
     // USER CAN NOW MAKE CHANGES ------------------------------------- V
     
-            ourPatients.appendPatient();
-            ourPatients.viewPatients();
-        //    ourPatients.appendPatient();
-        //    ourPatients.viewPatients();
-        //    ourPatients.appendPatient();
-        //    ourPatients.viewPatients();
+    ourPatients.appendPatient(); // do not input names starting w/ lowercase (fix later)
+    ourPatients.viewPatients();
+    ourPatients.editAppointmentForPatient(); // only lets user add an appt as of now to ensure vector works
+    ourPatients.viewPatients();
+    
+//    ourPatients.editAppointmentForPatient();
+//    ourPatients.viewPatients();
+//    ourPatients.appendPatient();
+//    ourPatients.viewPatients();
+//    ourPatients.appendPatient();
+//    ourPatients.viewPatients();
     
     // USER IS DONE MAKING CHANGES ------------------------------------ ^
     
     
     
     // LINKED LIST IS SAVED BACK INTO TEXT FILE -------------------------------------V
-    // ..
+    ourPatients.fileWriter(); // not complete. Just basics of how DLL works are shown
     // TEXT FILE DONE BEING RECREATED------------------------------------------------^
     
     return 0;
