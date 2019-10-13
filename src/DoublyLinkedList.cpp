@@ -23,7 +23,24 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
     newPatient->lName = lName;
     newPatient->phoneNumber = phone;
     
-    // ADD APPOINTMENT INFORMATION IN LATER, for now ignore... ********************************************
+    // parse apts string into apts **********************FINISH, might be better way
+    
+    istringstream iss(apts);
+    string word;
+    while(iss >> word) {
+        /* do stuff with word */
+        cout << word <<endl;
+    }
+    //    FOR EACH APPT:
+//    Appointment *newAppointment = new Appointment;
+//    cout << "Appointment Date: ";
+//    cin >> newAppointment->date;
+//    cout << "Appointment Time: ";
+//    cin >> newAppointment->time;
+//
+//    newPatient->appointments.push_back(*newAppointment);
+    
+    
     
     // insert node (list should be in alphabetical order from the start)
     location = head;
@@ -98,9 +115,9 @@ void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital l
 
 void DoublyLinkedList::findPatient() { // sets location to node to be edited
     string lName, fName;
-    cout << "Last Name of Patient to Edit: ";
+    cout << "Last Name: ";
     cin >> lName;
-    cout << "First Name of Patient to Edit: ";
+    cout << "First Name: ";
     cin >> fName;
     
     location = head;
@@ -115,19 +132,20 @@ void DoublyLinkedList::findPatient() { // sets location to node to be edited
 }
 
 // EDIT:
-void DoublyLinkedList::editAppointmentForPatient() {
+void DoublyLinkedList::editAppointmentForPatient() { // currently only lets user add an appointment
+    cout << "Find patient in system to edit: " << endl;
     findPatient();
     
     if (location == nullptr) {
         cout << "The Patient was not found." << endl;
     } else {
-        cout << "Patient: " << location->fName << " " << location->lName << endl;
+        cout << "Patient Found: " << location->fName << " " << location->lName << endl;
     }
     
     Appointment *newAppointment = new Appointment;
-    cout << "Add Apt Date: ";
+    cout << "\tAdd Apt Date: ";
     cin >> newAppointment->date;
-    cout << "Add Apt Time: ";
+    cout << "\tAdd Apt Time: ";
     cin >> newAppointment->time;
     
     location->appointments.push_back(*newAppointment);

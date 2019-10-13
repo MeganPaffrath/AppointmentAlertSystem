@@ -51,9 +51,8 @@ int main()
     ourPatients.viewPatients(); // this should show exactly what is in txt file when you are done
     
     // Ex of initializeList (remove this section once fileReader is completed properly):
-    ourPatients.initializeList("Bob", "Smith", "8937238294", "long string of apt information to be included later");
-    ourPatients.initializeList("Abby", "Jones", "3237238294", "long string of apt information to be included later");
-    ourPatients.initializeList("Anna", "Zavier", "1237238294", "long string of apt information to be included later");
+    ourPatients.initializeList("Bob", "Smith", "999999999", "1/23/20 at 2:00pm, 2/22/20 at 11:00am"); // patient w/ 2 apts
+    ourPatients.initializeList("Abby", "Jones", "8888888888", ""); // patient w/ no apts
     ourPatients.viewPatients();
     
     // DLL done being initialized from txt file ---------------------------------------------------^
