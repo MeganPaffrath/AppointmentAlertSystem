@@ -96,41 +96,32 @@ void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital l
 //    cout << "END" <<endl;
 }
 
-DoublyLinkedList::Patient* DoublyLinkedList::findPatient() {
-    Patient* tempPatient = new Patient;
-    bool foundPatient = false;
-    
+void DoublyLinkedList::findPatient() { // sets location to node to be edited
     string lName, fName;
     cout << "Last Name of Patient to Edit: ";
     cin >> lName;
     cout << "First Name of Patient to Edit: ";
     cin >> fName;
     
-    // serches and returns 'node'
     location = head;
     if (location != nullptr) {
         while (location != nullptr) {
             if (location->lName == lName && location->fName == fName) {
-                tempPatient = location;
-                foundPatient = true;
+                return;
             }
             location = location->next;
         }
     }
-    if (!foundPatient) { // if not found set pointer to nullptr
-        tempPatient = nullptr;
-    }
-    return tempPatient;
 }
 
 // EDIT:
 void DoublyLinkedList::editAppointmentForPatient() {
-    Patient* tempPatient = findPatient();
+    findPatient();
     
-    if (tempPatient == nullptr) {
+    if (location == nullptr) {
         cout << "The Patient was not found." << endl;
     } else {
-        cout << "Patient: " << tempPatient->fName << " " << tempPatient->lName << endl;
+        cout << "Patient: " << location->fName << " " << location->lName << endl;
     }
     
     Appointment *newAppointment = new Appointment;
@@ -139,14 +130,7 @@ void DoublyLinkedList::editAppointmentForPatient() {
     cout << "Add Apt Time: ";
     cin >> newAppointment->time;
     
-    tempPatient->appointments.push_back(*newAppointment); // DOES NOT WORK AS EXPECTED
-    
-    for (int i = 0; i < tempPatient->appointments.size(); i++) { // this works though
-        cout << "\t\t" << tempPatient->appointments[i].date << " at " << tempPatient
-        ->appointments[i].time << endl;
-    }
-    
-    delete tempPatient; // seems to delete all appointment information for patient node like it should not do.
+    location->appointments.push_back(*newAppointment);
 }
 
 // REMOVE:

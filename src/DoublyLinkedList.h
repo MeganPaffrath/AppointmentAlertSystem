@@ -40,7 +40,7 @@ public:
     void initializeList(string fName, string lName, string phone, string apts); // appends patients w/ info as args
     void appendPatient(); // adds a patient into list in alphabetical order by last name
     
-    DoublyLinkedList::Patient* findPatient();
+    void findPatient();
     
     // EDIT:
     void editAppointmentForPatient();
