@@ -24,23 +24,31 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
     newPatient->phoneNumber = phone;
     
     // parse apts string into apts **********************FINISH, might be better way
-    
+
     istringstream iss(apts);
     string word;
+    // Make new appointment before each comma (and if a comma is found
     while(iss >> word) {
-        /* do stuff with word */
-        cout << word <<endl;
+        if (word.find("/") != string::npos) {
+            Appointment *newAppointment = new Appointment;
+            newAppointment->date = word;
+            bool endFound = false;
+            while (!endFound && iss >> word) { // go to next word
+                if (word.find("at") != string::npos) {
+                    // ignore
+                } else if (word.find(":") != string::npos) { // is time
+                    endFound = true;
+                    if (word.find(",") != string::npos) {
+                        // remove comma from string
+                        word.erase(word.end()-1, word.end());
+                    }
+                    newAppointment->time = word;
+                }
+            }
+            newPatient->appointments.push_back(*newAppointment);
+//            cout << "appended " << newAppointment->date << " at " << newAppointment->time << endl;
+        }
     }
-    //    FOR EACH APPT:
-//    Appointment *newAppointment = new Appointment;
-//    cout << "Appointment Date: ";
-//    cin >> newAppointment->date;
-//    cout << "Appointment Time: ";
-//    cin >> newAppointment->time;
-//
-//    newPatient->appointments.push_back(*newAppointment);
-    
-    
     
     // insert node (list should be in alphabetical order from the start)
     location = head;
@@ -55,6 +63,8 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
         newPatient->next = nullptr;
         tail = newPatient;
     }
+    
+    cout << "Appended " << newPatient->fName << " " << newPatient->lName << endl;
 }
 void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital letters (fix)
     // Prepare new patient 'node'
@@ -187,11 +197,44 @@ void DoublyLinkedList::textSender() { // calls texting function
 // File Reader:
 void DoublyLinkedList::fileReader() {
     string line;
+    int phraseLength;
     ifstream readFile("Patients.txt");
     if (readFile.is_open()) {
+        getline(readFile,line); // ignore first line
         while(getline(readFile,line)) {
-            cout << line << endl; // break up each line into inputs for initialize
-            //initializeList("Bob", "Smith", "8937238294", "long string of apt information to be included later");
+            string fName, lName, phone, aptInfo;
+            // prep each line section:
+            istringstream iss(line);
+            string word;
+            if(iss >> word) {
+                word.erase(word.end()-1, word.end());
+//                cout << "lName: " << word << endl;
+                lName = word;
+                phraseLength = int(word.length());
+//                cout << "LEN: " << phraseLength << endl;
+                line.erase(line.begin(), line.begin()+phraseLength);
+            }
+            if(iss >> word) {
+//                cout << "fName: " << word << endl;
+                fName = word;
+                phraseLength = int(word.length()) + 1;
+//                cout << "LEN: " << phraseLength << endl;
+                line.erase(line.begin(), line.begin()+phraseLength);
+            }
+            if (iss >> word) {
+//                cout << "Phone: " << word << endl;
+                phone = word;
+                phraseLength = int(word.length()) + 1;
+//                cout << "LEN: " << phraseLength << endl;
+                line.erase(line.begin(), line.begin()+phraseLength);
+            }
+//            cout << "D: " << line << endl;
+            aptInfo = line;
+            
+            
+            
+//            cout << line << endl; // break up each line into inputs for initialize
+            initializeList(fName, lName, phone, aptInfo);
         }
         readFile.close();
     } else {
@@ -201,27 +244,43 @@ void DoublyLinkedList::fileReader() {
 // File Writer:
 void DoublyLinkedList::fileWriter() {
     
-    // Prepare & write one string per patient
-    location = head;
-    if (head == nullptr) {
-        cout << "List is empty, nothing to write" << endl;
-    } else {
-        while (location != nullptr) {
-            string appendLine;
-            appendLine = location->lName + "\t\t\t" + location->fName + "\t\t\t" + location->phoneNumber; // needs better formatting than tabs probably
-            // figure out how to implement and add location->appointments
-
-            // String of appointments:
-            for (int i = 0; i < location->appointments.size(); i++) {
-                appendLine = appendLine + location->appointments[i].date + " at " + location->appointments[i].time + " ";
+    ofstream writeFile ("Patients.txt");
+    if (writeFile.is_open()) {
+        // Write string:
+        string firstString = "lName, fName Phone Appointments \n";
+        writeFile << firstString;
+        
+        // Prepare & write one string per patient
+        location = head;
+        if (head == nullptr) {
+            cout << "List is empty, nothing to write" << endl;
+        } else {
+            while (location != nullptr) {
+                string appendLine;
+                appendLine = location->lName + ", " + location->fName + " " + location->phoneNumber + " "; // needs better formatting than tabs probably
+                // figure out how to implement and add location->appointments
+                
+                // String of appointments:
+                for (int i = 0; i < location->appointments.size()-1; i++) {
+                    appendLine = appendLine + location->appointments[i].date + " at " + location->appointments[i].time + ", ";
+                }
+                // Last appointment
+                int lastApt = int(location->appointments.size()-1);
+                appendLine = appendLine + location->appointments[lastApt].date + " at " + location->appointments[lastApt].time + " ";
+                
+                appendLine = appendLine + "\n";
+                
+                cout << "Appending: " << appendLine; // idea of what will be appended
+                writeFile << appendLine;
+                // APPEND LINE TO TEXT DOC HERE ----------------------------------------------------------------
+                
+                location = location->next;
             }
-            appendLine = appendLine + "\n";
-            
-            cout << "APPENDING: " << appendLine; // idea of what will be appended
-            // APPEND LINE TO TEXT DOC HERE ----------------------------------------------------------------
-            
-            location = location->next;
         }
+    } else {
+        cout << "Unable to open file to write to. " << endl;
     }
+    
+
     
 }

@@ -1,3 +1,4 @@
-Name                Phone               Appointments
-Abby Smith          1111111111         5/20/19 11:00pm, 8/23/19 1:25pm
-John Hamilton       2222222222         4/23/20 9:23pm
+lName, fName Phone Appointments 
+Elm, Joe 2222222222 2/3/20 at 3:00pm 
+Jones, Abby 88888888 1/2/19 at 4:00pm, 1/30/20 at 8:00am 
+Smith, Bob 1111111111 1/4/20 at 2:00pm 
