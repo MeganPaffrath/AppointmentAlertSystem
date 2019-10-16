@@ -28,7 +28,7 @@ using namespace std;
 
 int main()
 {
-    // MESSAGE SENDING FUNCTION USE - IMPLEMENT LATER --------------------------------------------V
+    // MESSAGE SENDING ABILITY -------------------------------------------------------------V
     bool testMode = true; // true = won't actualy send messages
     
     KeyGetter keyGetter;
@@ -38,10 +38,9 @@ int main()
     
     auto twilioObj = std::make_shared<twilio::Twilio>(keyGetter.getTwilioSID(), keyGetter.getTwilioToken());
     
-    SendSMS sendText;
-    sendText.sendMessage(megansPhoneNumber, twilioPhoneNumber, "Megan", "1/20/20", "11:00am", *twilioObj, testMode);
+//    sendMessage(megansPhoneNumber, twilioPhoneNumber, "Megan", "1/20/20", "11:00am", *twilioObj, testMode);
     
-    // MESSAGE SENDING FUNCTION USE - END ---------------------------------------------------------^
+    // MESSAGE SENDING ABILITY - END ---------------------------------------------------------^
     
     
     // NEXT PROGRAMMER: initialize LL from text file using following funtions ----------------------V
@@ -59,12 +58,32 @@ int main()
     
     // USER CAN NOW MAKE CHANGES ------------------------------------- V
     
-    // MAKE A MENU:
-//
-//    ourPatients.appendPatient(); // do not input names starting w/ lowercase (fix later)
-//    ourPatients.viewPatients();
-//    ourPatients.editAppointmentForPatient(); // only lets user add an appt as of now to ensure vector works, not fully functional yet
-//    ourPatients.viewPatients();
+    // MENU:
+    char menuItem = 'x';
+    while (menuItem != 'Q') {
+        cout << "Menu --------------" << endl;
+        cout << "\tP: Add a patient" << endl;
+        cout << "\tA: Edit/add appointment info" << endl;
+        cout << "\tV: View all Patients" << endl;
+        cout << "\tQ: Quit" << endl;
+        cout << "\n\tSelection: ";
+        cin >> menuItem;
+        cout << endl;
+        
+        if (menuItem == 'Q' || menuItem == 'q') {
+            cout << "Quitting program...\n" << endl;
+            break;
+        } else if (menuItem == 'P' || menuItem == 'p') {
+            ourPatients.appendPatient(*twilioObj, twilioPhoneNumber, testMode); // do not input names starting w/ lowercase (fix later)
+        } else if (menuItem == 'A' || menuItem == 'a') {
+            cout << "You currently can only add apointments." << endl; // add in text function when apt added
+            ourPatients.editAppointmentForPatient(*twilioObj, twilioPhoneNumber, testMode);
+        } else if (menuItem == 'V' || menuItem == 'v') {
+            ourPatients.viewPatients();
+        } else {
+            cout << "Invalid input. Try again" << endl;
+        }
+    }
     
     // USER IS DONE MAKING CHANGES ------------------------------------ ^
     

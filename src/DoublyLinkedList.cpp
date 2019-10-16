@@ -66,7 +66,7 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
     
     cout << "Appended " << newPatient->fName << " " << newPatient->lName << endl;
 }
-void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital letters (fix)
+void DoublyLinkedList::appendPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode) { // Assumes all names start w/ capital letters (fix)
     // Prepare new patient 'node'
     cout << "ADD A NEW PATIENT: " << endl;
     Patient *newPatient = new Patient;
@@ -84,6 +84,10 @@ void DoublyLinkedList::appendPatient() { // Assumes all names start w/ capital l
     cin >> newAppointment->time;
     
     newPatient->appointments.push_back(*newAppointment);
+    
+    cout << "Patient Added!" << endl;
+    sendMessage(newPatient->phoneNumber, fromNumber, newPatient->fName, newAppointment->date, newAppointment->time, twilioObj, testMode);
+    
     
     // Find location to insert after:
     location = head;
@@ -142,7 +146,7 @@ void DoublyLinkedList::findPatient() { // sets location to node to be edited
 }
 
 // EDIT:
-void DoublyLinkedList::editAppointmentForPatient() { // currently only lets user add an appointment
+void DoublyLinkedList::editAppointmentForPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode) { // currently only lets user add an appointment
     cout << "Find patient in system to edit: " << endl;
     findPatient();
     
@@ -159,6 +163,8 @@ void DoublyLinkedList::editAppointmentForPatient() { // currently only lets user
     cin >> newAppointment->time;
     
     location->appointments.push_back(*newAppointment);
+    
+    sendMessage(location->phoneNumber, fromNumber, location->fName, newAppointment->date, newAppointment->time, twilioObj, testMode);
 }
 
 // REMOVE:
@@ -190,10 +196,7 @@ void DoublyLinkedList::viewPatients() {
 //    void alphabeticSort(); // sorts list in alphabetical order
 //    void dateSort(); // sort in order of upcoming appointments
 
-// TEXT:
-void DoublyLinkedList::textSender() { // calls texting function
-    
-}
+
 // File Reader:
 void DoublyLinkedList::fileReader() {
     string line;

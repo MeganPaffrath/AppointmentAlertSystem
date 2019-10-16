@@ -7,6 +7,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include "../include/twilio.h"
+#include "SendSMS.h"
 using namespace std;
 
 
@@ -38,12 +40,13 @@ public:
     
     // INSERT:
     void initializeList(string fName, string lName, string phone, string apts); // appends patients w/ info as args
-    void appendPatient(); // adds a patient into list in alphabetical order by last name
+    void appendPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode); // adds a patient into list in alphabetical order by last name
     
     void findPatient();
     
     // EDIT:
-    void editAppointmentForPatient();
+    void editAppointmentForPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode);
+    
     
     // REMOVE:
     void removePatient();
@@ -55,8 +58,8 @@ public:
 //    void alphabeticSort(); // sorts list in alphabetical order
 //    void dateSort(); // sort in order of upcoming appointments
     
-    // TEXT:
-    void textSender(); // if appointment is in 5 days, send reminder to patient
+
+
     
     
     // File Reader:
