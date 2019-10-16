@@ -63,10 +63,10 @@ public:
     
     
     // File Reader:
-    void fileReader(); // reads Patients.txt file and initializes DLL
+    void fileReader(bool& failPW_); // reads Patients.txt file and initializes DLL
 
     // FILE WRITER:
-    void fileWriter(); // writes Patient list Patients.txt
+    void fileWriter(string password_); // writes Patient list Patients.txt
     
 };
 

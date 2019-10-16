@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "DoublyLinkedList.h"
+#include "../include/fencrypt.h"
 //#include <vector>
 using namespace std;
 
@@ -198,17 +199,42 @@ void DoublyLinkedList::viewPatients() {
 
 
 // File Reader:
-void DoublyLinkedList::fileReader() {
-    string line;
+void DoublyLinkedList::fileReader(bool& failPW_) {
+    string line, password;
     int phraseLength;
+
     ifstream readFile("Patients.txt");
+
     if (readFile.is_open()) {
+
+		cout << "Enter Password: ";
+		cin >> password;
+		
         getline(readFile,line); // ignore first line
-        while(getline(readFile,line)) {
+
+		decrypt(line, password);
+
+		if (password != line)
+		{
+			cout << "\n   !!!       Incorrect password.       !!!\n" << endl;
+			failPW_ = true;
+			return;
+		}
+
+        while(true) {
             string fName, lName, phone, aptInfo;
+
+
             // prep each line section:
+			getline(readFile, line);
+
+			if(readFile.eof())
+			{break;}
+
+			decrypt(line, password);
             istringstream iss(line);
             string word;
+
             if(iss >> word) {
                 word.erase(word.end()-1, word.end());
 //                cout << "lName: " << word << endl;
@@ -217,6 +243,7 @@ void DoublyLinkedList::fileReader() {
 //                cout << "LEN: " << phraseLength << endl;
                 line.erase(line.begin(), line.begin()+phraseLength);
             }
+
             if(iss >> word) {
 //                cout << "fName: " << word << endl;
                 fName = word;
@@ -224,6 +251,7 @@ void DoublyLinkedList::fileReader() {
 //                cout << "LEN: " << phraseLength << endl;
                 line.erase(line.begin(), line.begin()+phraseLength);
             }
+
             if (iss >> word) {
 //                cout << "Phone: " << word << endl;
                 phone = word;
@@ -231,6 +259,7 @@ void DoublyLinkedList::fileReader() {
 //                cout << "LEN: " << phraseLength << endl;
                 line.erase(line.begin(), line.begin()+phraseLength);
             }
+
 //            cout << "D: " << line << endl;
             aptInfo = line;
             
@@ -245,13 +274,17 @@ void DoublyLinkedList::fileReader() {
     }
 }
 // File Writer:
-void DoublyLinkedList::fileWriter() {
+void DoublyLinkedList::fileWriter(string password_) {
     
     ofstream writeFile ("Patients.txt");
     if (writeFile.is_open()) {
+
         // Write string:
-        string firstString = "lName, fName Phone Appointments \n";
-        writeFile << firstString;
+        string firstString = password_;
+
+		encrypt(firstString, password_);
+
+        writeFile << firstString << endl;
         
         // Prepare & write one string per patient
         location = head;
@@ -267,14 +300,17 @@ void DoublyLinkedList::fileWriter() {
                 for (int i = 0; i < location->appointments.size()-1; i++) {
                     appendLine = appendLine + location->appointments[i].date + " at " + location->appointments[i].time + ", ";
                 }
+
                 // Last appointment
                 int lastApt = int(location->appointments.size()-1);
                 appendLine = appendLine + location->appointments[lastApt].date + " at " + location->appointments[lastApt].time + " ";
                 
-                appendLine = appendLine + "\n";
                 
                 cout << "Appending: " << appendLine; // idea of what will be appended
-                writeFile << appendLine;
+
+				encrypt(appendLine, password_);
+
+                writeFile << appendLine << endl;
                 // APPEND LINE TO TEXT DOC HERE ----------------------------------------------------------------
                 
                 location = location->next;
