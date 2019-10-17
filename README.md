@@ -2,7 +2,7 @@
 
 ## Installation
 - Make sure you system supports:
-  - stdio.h, stdlib.h, unistd.h
+  - stdio.h, stdlib.h, unistd.h, getopt.h
   - iostream, sstream, string (C++ standard libraries)
   - libcurl
     - Mac: comes pre-installed
