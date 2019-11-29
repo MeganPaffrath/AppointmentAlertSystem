@@ -56,7 +56,14 @@ namespace twilio {
                               bool verbose)
     {
         std::stringstream response_stream;
+        
+        
+        // Windows / Mac
+#ifdef __APPLE__
         std::u16string converted_message_body;
+#else
+        std::wstring converted_message_body;
+#endif
         
         // Assume UTF-8 input, convert to UCS-2 to check size
         // See: https://www.twilio.com/docs/api/rest/sending-messages for

@@ -23,8 +23,6 @@ private:
         string lName;
         string phoneNumber;
         vector<Appointment> appointments;
-//        string aptDateTime[10][10]; // { {"MM/YY", "hh:mmxm"}, ... , {"MM/YY", "hh:mmxm"} }
-//        vector<string[2]> aptDateTime;
         Patient* next;
         Patient* prev;
     };
@@ -48,8 +46,9 @@ public:
     void editAppointmentForPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode);
     
     
-    // REMOVE:
-    void removePatient();
+    // REMOVE: takes in pointer to the location of patient if it exists via findPatient method
+	void deletePatient();
+    void removePatient(Patient*,Patient*);
     
     // VIEW:
     void viewPatients(); // prints the list data
@@ -67,6 +66,8 @@ public:
 
     // FILE WRITER:
     void fileWriter(string password_); // writes Patient list Patients.txt
+
+	bool isEmpty() const;
     
 };
 
