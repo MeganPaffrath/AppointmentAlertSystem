@@ -39,7 +39,9 @@ public:
     // INSERT:
     void initializeList(string fName, string lName, string phone, string apts); // appends patients w/ info as args
     void appendPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode); // adds a patient into list in alphabetical order by last name
-    
+    bool numberValidator(string phoneInput); // true if valid phone #
+    bool dateValidator(string dateInput); // validates if date input is okay or not, calls old date
+    bool oldDate(string dateInput); // returns true of old date
     void findPatient();
     
     // EDIT:
@@ -47,8 +49,9 @@ public:
     
     
     // REMOVE: takes in pointer to the location of patient if it exists via findPatient method
-	void deletePatient();
     void removePatient(Patient*,Patient*);
+    void deletePatient(); // was written in place of removePatient? verify what way is better?
+    void removeOldAppointments(); // cleans up appintment info
     
     // VIEW:
     void viewPatients(); // prints the list data

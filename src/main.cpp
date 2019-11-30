@@ -36,7 +36,7 @@ using namespace std;
 int main()
 {
 	// MESSAGE SENDING ABILITY -------------------------------------------------------------V
-	bool testMode = false; // true = won't actually send messages
+	bool testMode = true; // true = won't actually send messages
 
 	KeyGetter keyGetter;
 	keyGetter.setValues();
@@ -53,7 +53,9 @@ int main()
 		// NEXT PROGRAMMER: initialize LL from text file using following funtions ----------------------V
 	DoublyLinkedList ourPatients; // create DLL
 	bool failPW = false;
-
+    
+//    cout << "Valid? : " << ourPatients.dateValidator("11/30/19") << endl;
+//    cout << "Valid? : " << ourPatients.numberValidator("999-999-111") << endl;
 
 
 	cout << "****READING FILE: " << endl;
@@ -77,8 +79,8 @@ int main()
 		char menuItem = 'x';
 		while (menuItem != 'Q') {
 			cout << "Menu --------------" << endl;
-			cout << "\tP: Add a patient" << endl;
-			cout << "\tA: Edit/add appointment info" << endl;
+			cout << "\tA: Add a patient" << endl;
+			cout << "\tE: Edit/add appointment info" << endl;
 			cout << "\tV: View all Patients" << endl;
 			cout << "\tR: Remove Patient" << endl;
 			cout << "\tQ: Quit" << endl;
@@ -90,10 +92,10 @@ int main()
 				cout << "Quitting program...\n" << endl;
 				break;
 			}
-			else if (menuItem == 'P' || menuItem == 'p') {
+			else if (menuItem == 'A' || menuItem == 'a') {
 				ourPatients.appendPatient(*twilioObj, twilioPhoneNumber, testMode); // do not input names starting w/ lowercase (fix later)
 			}
-			else if (menuItem == 'A' || menuItem == 'a') {
+			else if (menuItem == 'E' || menuItem == 'e') {
 				cout << "You currently can only add apointments." << endl; // add in text function when apt added
 				ourPatients.editAppointmentForPatient(*twilioObj, twilioPhoneNumber, testMode);
 			}

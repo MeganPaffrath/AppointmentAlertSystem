@@ -1,19 +1,26 @@
 
 #include <stdio.h>
+#include <chrono>
+#include <ctime>
+#include <iostream>
 #include <iostream>
 #include <fstream>
 #include "DoublyLinkedList.h"
 #include "../include/fencrypt.h"
+
+typedef std::chrono::system_clock Clock;
+
 //#include <vector>
 using namespace std;
 
 
-
+// Done by: Megan Paffrath
 DoublyLinkedList::DoublyLinkedList() {
 	this->head = nullptr;
 	this->location = nullptr;
 }
-DoublyLinkedList::~DoublyLinkedList() { // DO
+
+DoublyLinkedList::~DoublyLinkedList() {
 	//does nothing if no nodes exist as no space is allocated 
 	if (!isEmpty()) {
 		//if not not empty (e.g: there are nodes existing on heap)
@@ -34,7 +41,7 @@ DoublyLinkedList::~DoublyLinkedList() { // DO
 	}
 }
 
-// INSERT:
+// Done by: Megan Paffrath
 void DoublyLinkedList::initializeList(string fName, string lName, string phone, string apts) {
 	
 	//Create a new patient instance (Node)
@@ -43,7 +50,6 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
 	newPatient->lName = lName;
 	newPatient->phoneNumber = phone;
 
-	// parse apts string into apts **********************FINISH, might be better way
 
 	istringstream iss(apts);	//see C++ docs on istringstream 
 	string word;
@@ -88,21 +94,163 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
 
 	cout << "Appended " << newPatient->fName << " " << newPatient->lName << endl;
 }
+
+bool DoublyLinkedList::numberValidator(string phoneInput) {
+    // parse phone number:
+    string tempNumber = phoneInput;
+    vector <string> tokens;
+    stringstream parseDate(tempNumber);
+    
+    string parsedItem;
+    
+    while(getline(parseDate, parsedItem, '-'))
+    {
+        //        cout << "x: " << parsedItem << endl;
+        tokens.push_back(parsedItem);
+    }
+    
+//    cout << tokens[0] << " . " << tokens[1] << " . " << tokens[2] << endl;
+    
+    // not right number of '-'
+    if (tokens.size() !=  3) {
+        cout << "Invalid phone number" << endl;
+        return false;
+    }
+    
+    // bad formatting
+    if (tokens[0].size() != 3 || tokens[1].size() != 3 || tokens[2].size() != 4) {
+        cout << "Invalid phone number" << endl;
+        return false;
+    }
+    
+    return true;
+}
+
+// Done by: Megan Paffrath
+bool DoublyLinkedList::oldDate(string dateInput) {
+    bool oldDate = false;
+    // Set current date
+    // scr: stack overflow
+    auto now = Clock::now();
+    std::time_t now_c = Clock::to_time_t(now);
+    struct tm *parts = std::localtime(&now_c);
+    int thisYear = 1900 + parts->tm_year;
+    int thisMonth = parts->tm_mon + 1;
+    int thisDay = parts->tm_mday;
+//    cout << "Year : " << thisYear << " Month: " << thisMonth << " Day: " << thisDay << endl;
+
+    // convert input stringto date:
+    string tempDate = dateInput;
+    vector <string> tokens;
+    stringstream parseDate(tempDate);
+    
+    string parsedItem;
+    
+    while(getline(parseDate, parsedItem, '/'))
+    {
+//        cout << "x: " << parsedItem << endl;
+        tokens.push_back(parsedItem);
+    }
+    
+    int apptYear = stoi(tokens[2]) + 2000;
+    int apptMonth = stoi(tokens[0]);
+    int apptDay = stoi(tokens[1]);
+    
+    
+//    cout << "Year given: " << apptYear << " Month: " << apptMonth << " Day: " << apptDay << endl;
+    
+    if (apptYear < thisYear) {
+        oldDate = true;// old appt
+    }
+    if (apptYear == thisYear) { // if this year, check month and date
+        if (apptMonth < thisMonth) {
+            oldDate = true; // old appt
+        }
+        if (apptMonth == thisMonth) { // if this month, check date
+            if (apptDay < thisDay)
+                oldDate = true; // old appt
+        }
+        
+    }
+    if (oldDate) {
+        cout << dateInput << " is on old date. " << endl;
+        return true;
+    }
+    
+    
+    return false;
+}
+
+// Done by: Megan Paffrath
+bool DoublyLinkedList::dateValidator(string dateInput) {
+    string tempDate = dateInput;
+    vector <string> tokens;
+    stringstream parseDate(tempDate);
+    
+    string parsedItem;
+    
+    while(getline(parseDate, parsedItem, '/'))
+    {
+//        cout << "x: " << parsedItem << endl;
+        tokens.push_back(parsedItem);
+    }
+    
+    
+    cout << endl;
+    
+    if (tokens.size() < 3 || tokens.size() > 3) { // not valid date input
+        return false;
+    }
+    
+    // if date is too large
+    if (stoi(tokens[0]) > 12) { // cant have over 12 months
+        return false;
+    }
+    if (stoi(tokens[1]) > 31) { // cant have over 31 days
+        return false;
+    }
+    if (stoi(tokens[2]) > 100) { // too many digits for year
+        return false;
+    }
+    
+    // check if old date:
+    if (oldDate(dateInput)) {
+        return false;
+    }
+    
+    
+    return true;
+}
+
+// Done by: Megan Paffrath
 void DoublyLinkedList::appendPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode) { // Assumes all names start w/ capital letters (fix)
 	// Prepare new patient 'node'
 	cout << "ADD A NEW PATIENT: " << endl;
 	Patient* newPatient = new Patient;
 	cout << "First Name: ";
 	cin >> newPatient->fName;
+    newPatient->fName[0] = toupper(newPatient->fName[0]);
 	cout << "Last Name: ";
 	cin >> newPatient->lName;
-	cout << "Phone Number: ";
+    newPatient->lName[0] = toupper(newPatient->lName[0]);
+    cout << "Phone Number (###-###-####): ";
 	cin >> newPatient->phoneNumber;
+    while (!numberValidator(newPatient->phoneNumber)) { // while bad phone number
+        cout << "Invalid input." << endl;
+        cout << "Phone Number (###-###-####): ";
+        cin >> newPatient->phoneNumber;
+    }
+    
 
 	Appointment* newAppointment = new Appointment;
-	cout << "Appointment Date: ";
+	cout << "Appointment Date (MM/DD/YY): ";
 	cin >> newAppointment->date;
-	cout << "Appointment Time: ";
+    while (!dateValidator(newAppointment->date)) { // while bad appt date
+        cout << "Invalid input." << endl;
+        cout << "Appointment Date (MM/DD/YY): ";
+        cin >> newAppointment->date;
+    }
+    cout << "Appointment Time (00:00am or pm): ";
 	cin >> newAppointment->time;
 
 	newPatient->appointments.push_back(*newAppointment);
@@ -154,7 +302,7 @@ void DoublyLinkedList::appendPatient(twilio::Twilio twilioObj, string fromNumber
 
 //   Created by Jose Javier III
 void DoublyLinkedList::deletePatient()   // sets location to node to be edited
-{ 
+{
 	string lName, fName;
 	cout << "Last Name: ";
 	cin >> lName;
@@ -174,6 +322,9 @@ void DoublyLinkedList::deletePatient()   // sets location to node to be edited
 			location = location->next;
 		}
 	}
+    
+    // no patient was deleted
+    cout << "ERROR: Patient not found to delete. " << endl << endl;
 }
 
 void DoublyLinkedList::findPatient() { // sets location to node to be edited
@@ -197,7 +348,7 @@ void DoublyLinkedList::findPatient() { // sets location to node to be edited
 	}
 }
 
-// EDIT:
+// Done by: Megan Paffrath
 void DoublyLinkedList::editAppointmentForPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode) { // currently only lets user add an appointment
 	cout << "Find patient in system to edit: " << endl;
 	findPatient();
@@ -222,6 +373,7 @@ void DoublyLinkedList::editAppointmentForPatient(twilio::Twilio twilioObj, strin
 }
 
 // REMOVE: takes in pointers to the current location and previous location, if found, from findPatient() method
+// Done by: Megan Paffrath
 void DoublyLinkedList::removePatient(Patient* patientLoc, Patient* trailerLoc) {
 
 	//Edge case: Empty (no patients)
@@ -243,6 +395,7 @@ void DoublyLinkedList::removePatient(Patient* patientLoc, Patient* trailerLoc) {
 }
 
 // VIEW:
+// Done by: Megan Paffrath
 void DoublyLinkedList::viewPatients() {
 	cout << "\n--- All Patients and Appointments ---\n" << endl;
 	location = head;
@@ -262,6 +415,35 @@ void DoublyLinkedList::viewPatients() {
 	}
 	cout << "-----------------------------------------\n" << endl;
 }
+
+
+
+
+// :
+// Done by: Megan Paffrath
+void DoublyLinkedList::removeOldAppointments() {
+    cout << "\n--- Removing old Appointments: ---\n" << endl;
+    location = head;
+    if (head == nullptr) {
+        cout << "List is empty, no appointments to remove." << endl;
+    }
+    else {
+        while (location != nullptr) {
+            cout << location->lName << ", " << location->fName << endl;
+            cout << "\tAppointments and times: " << endl;
+            // iterate through appts:
+            for (int i = 0; i < location->appointments.size(); i++) {
+                string currDateCheck = location->appointments[i].date;
+                cout << "Checking: " << currDateCheck;
+            }
+            location = location->next;
+        }
+    }
+    cout << "-----------------------------------------\n" << endl;
+}
+
+
+
 
 // SORTS:
 //    void alphabeticSort(); // sorts list in alphabetical order
@@ -399,8 +581,6 @@ void DoublyLinkedList::fileWriter(string password_) {
 	else {
 		cout << "Unable to open file to write to. " << endl;
 	}
-
-
 
 }
 
