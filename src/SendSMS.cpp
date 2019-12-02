@@ -21,11 +21,14 @@ bool sendMessage(string toNumber, string fromNumber, string toName, string aptDa
         }
         return sent;
     } else {
-        string sentMessage = "\n-----\nmsg would be sent to " + toName + " at " + toNumber + ": \n";
-        string message = "Hello " + toName + " you have an upcoming appointment scheduled for " + aptDate + " at " + time + ".";
-        sentMessage = sentMessage + message + "\n-----\n";
+		cout << "\n   ---       DEBUG MODE       ---" << endl;
+        string sentMessage = "     msg would be sent to " + toName + " at " + toNumber + ": \n";
+        string message = "     Hello " + toName + " you have an upcoming appointment scheduled for " + aptDate + " at " + time + ".";
+        sentMessage = sentMessage + message + "\n";
+		
         
         cout << sentMessage;
+		cout << "   ---       DEBUG MODE       ---\n" << endl;
         return false;
     }
 }

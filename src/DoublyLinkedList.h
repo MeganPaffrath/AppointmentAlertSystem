@@ -46,6 +46,7 @@ public:
     
     // EDIT:
     void editAppointmentForPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode);
+	
     
     
     // REMOVE: takes in pointer to the location of patient if it exists via findPatient method

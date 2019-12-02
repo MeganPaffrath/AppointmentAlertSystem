@@ -35,6 +35,15 @@ using namespace std;
 
 int main()
 {
+	string temp;
+
+	cout << "\n" << endl;
+	cout << "   ============================================================" << endl;
+	cout << "   ===               Appointment Alert System               ===" << endl;
+	cout << "   ============================================================\n" << endl;
+	
+
+
 	// MESSAGE SENDING ABILITY -------------------------------------------------------------V
 	bool testMode = true; // true = won't actually send messages
 
@@ -58,7 +67,7 @@ int main()
 //    cout << "Valid? : " << ourPatients.numberValidator("999-999-111") << endl;
 
 
-	cout << "****READING FILE: " << endl;
+	
 	ourPatients.fileReader(failPW); // put initializeList function within this function when you read from it plz
 
 
@@ -72,13 +81,12 @@ int main()
 	// MENU:
 	if (!failPW)
 	{
-		cout << "****FILE DONE BEING READ " << endl;
-		ourPatients.viewPatients(); // this should show exactly what is in txt file when you are done
-
-
 		char menuItem = 'x';
+
 		while (menuItem != 'Q') {
-			cout << "Menu --------------" << endl;
+			cout << "\n   ----------------------" << endl;
+			cout << "   ---      Menu      ---" << endl;
+			cout << "   ----------------------\n" << endl;
 			cout << "\tA: Add a patient" << endl;
 			cout << "\tE: Edit/add appointment info" << endl;
 			cout << "\tV: View all Patients" << endl;
@@ -89,14 +97,13 @@ int main()
 			cout << endl;
 
 			if (menuItem == 'Q' || menuItem == 'q') {
-				cout << "Quitting program...\n" << endl;
+				cout << "   ---       Quitting program...       ---\n" << endl;
 				break;
 			}
 			else if (menuItem == 'A' || menuItem == 'a') {
 				ourPatients.appendPatient(*twilioObj, twilioPhoneNumber, testMode); // do not input names starting w/ lowercase (fix later)
 			}
 			else if (menuItem == 'E' || menuItem == 'e') {
-				cout << "You currently can only add apointments." << endl; // add in text function when apt added
 				ourPatients.editAppointmentForPatient(*twilioObj, twilioPhoneNumber, testMode);
 			}
 			else if (menuItem == 'V' || menuItem == 'v') {
@@ -117,7 +124,7 @@ int main()
 
 	// LINKED LIST IS SAVED BACK INTO TEXT FILE -------------------------------------V
 		string password;
-		cout << "Enter Password to secure the database: ";
+		cout << "     Enter Password to secure the database: ";
 		cin >> password;
 
 		ourPatients.fileWriter(password); // not complete. Just basics of how DLL works are shown

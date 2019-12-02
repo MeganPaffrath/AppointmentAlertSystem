@@ -3,10 +3,11 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
-#include <iostream>
 #include <fstream>
+#include <limits>
 #include "DoublyLinkedList.h"
 #include "../include/fencrypt.h"
+#undef max
 
 typedef std::chrono::system_clock Clock;
 
@@ -91,8 +92,6 @@ void DoublyLinkedList::initializeList(string fName, string lName, string phone, 
 		newPatient->next = nullptr;
 		tail = newPatient;
 	}
-
-	cout << "Appended " << newPatient->fName << " " << newPatient->lName << endl;
 }
 
 bool DoublyLinkedList::numberValidator(string phoneInput) {
@@ -105,7 +104,7 @@ bool DoublyLinkedList::numberValidator(string phoneInput) {
     
     while(getline(parseDate, parsedItem, '-'))
     {
-        //        cout << "x: " << parsedItem << endl;
+     //           cout << "x: " << parsedItem << endl;
         tokens.push_back(parsedItem);
     }
     
@@ -113,13 +112,11 @@ bool DoublyLinkedList::numberValidator(string phoneInput) {
     
     // not right number of '-'
     if (tokens.size() !=  3) {
-        cout << "Invalid phone number" << endl;
         return false;
     }
     
     // bad formatting
     if (tokens[0].size() != 3 || tokens[1].size() != 3 || tokens[2].size() != 4) {
-        cout << "Invalid phone number" << endl;
         return false;
     }
     
@@ -173,7 +170,7 @@ bool DoublyLinkedList::oldDate(string dateInput) {
         
     }
     if (oldDate) {
-        cout << dateInput << " is on old date. " << endl;
+        cout << "\n   !!!       " << dateInput << " is on old date.       !!!" << endl;
         return true;
     }
     
@@ -195,8 +192,6 @@ bool DoublyLinkedList::dateValidator(string dateInput) {
         tokens.push_back(parsedItem);
     }
     
-    
-    cout << endl;
     
     if (tokens.size() < 3 || tokens.size() > 3) { // not valid date input
         return false;
@@ -222,40 +217,99 @@ bool DoublyLinkedList::dateValidator(string dateInput) {
     return true;
 }
 
+
+//   Done by: Jose Javier III
+bool timeValidator(std::string input_)
+{
+	//   time format: HH:MM[A/P]
+	int tempBits1 = 0;
+	int tempBits2 = 0;
+	string tempString;
+	string tempAMPM;
+	vector<string> bits;
+	stringstream temp(input_);
+
+
+	while (getline(temp, tempString, ':'))
+	{bits.push_back(tempString);}
+
+
+	tempAMPM = toupper(bits[1][2]);
+
+
+	if (tempAMPM == "A" || tempAMPM == "P")
+	{
+		temp.clear();
+		temp.str("");
+		temp << bits[1];
+
+
+		if (tempAMPM == "A")
+		{getline(temp, tempString, 'A');}
+
+		else
+		{getline(temp, tempString, 'P');}
+
+
+		tempBits1 = stoi(bits[0]);
+		tempBits2 = stoi(tempString);
+
+
+		if (tempBits1 < 1 || tempBits1 > 12 || tempBits2 < 0 || tempBits2 > 59)
+		{return false;}
+
+		return true;
+	}
+
+	return false;
+}
+
 // Done by: Megan Paffrath
 void DoublyLinkedList::appendPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode) { // Assumes all names start w/ capital letters (fix)
 	// Prepare new patient 'node'
-	cout << "ADD A NEW PATIENT: " << endl;
+	cout << "\n   ----------------------------------------" << endl;
+	cout << "   ---         Add a New Patient        ---" << endl;
+	cout << "   ----------------------------------------\n" << endl;
 	Patient* newPatient = new Patient;
-	cout << "First Name: ";
+	cout << "     First Name: ";
 	cin >> newPatient->fName;
     newPatient->fName[0] = toupper(newPatient->fName[0]);
-	cout << "Last Name: ";
+	cout << "     Last Name: ";
 	cin >> newPatient->lName;
     newPatient->lName[0] = toupper(newPatient->lName[0]);
-    cout << "Phone Number (###-###-####): ";
+    cout << "     Phone Number (###-###-####): ";
 	cin >> newPatient->phoneNumber;
     while (!numberValidator(newPatient->phoneNumber)) { // while bad phone number
-        cout << "Invalid input." << endl;
-        cout << "Phone Number (###-###-####): ";
+		cout << "\n   !!!       Invalid input. Please try again.       !!!\n" << endl;
+        cout << "     Phone Number (###-###-####): ";
         cin >> newPatient->phoneNumber;
     }
     
 
 	Appointment* newAppointment = new Appointment;
-	cout << "Appointment Date (MM/DD/YY): ";
+	cout << "     Appointment Date (MM/DD/YY): ";
 	cin >> newAppointment->date;
     while (!dateValidator(newAppointment->date)) { // while bad appt date
-        cout << "Invalid input." << endl;
-        cout << "Appointment Date (MM/DD/YY): ";
+		cout << "\n   !!!       Invalid input. Please try again.       !!!\n" << endl;
+        cout << "     Appointment Date (MM/DD/YY): ";
         cin >> newAppointment->date;
     }
-    cout << "Appointment Time (00:00am or pm): ";
+    cout << "     Appointment Time (HH:MM[a or p]): ";
 	cin >> newAppointment->time;
+
+
+	while (!timeValidator(newAppointment->time))
+	{
+		cout << "\n   !!!       Invalid input. Please try again.       !!!\n" << endl;
+		cout << "     Appointment Time (HH:MM[a or p]): ";
+		cin >> newAppointment->time;
+	}
+
+	cout << endl;
 
 	newPatient->appointments.push_back(*newAppointment);
 
-	cout << "Patient Added!" << endl;
+	cout << "\n   ---       Patient Added!       ---\n" << endl;
 	sendMessage(newPatient->phoneNumber, fromNumber, newPatient->fName, newAppointment->date, newAppointment->time, twilioObj, testMode);
 
 
@@ -296,25 +350,33 @@ void DoublyLinkedList::appendPatient(twilio::Twilio twilioObj, string fromNumber
 		newPatient->prev = prevLoc;
 		newPatient->next = location;
 	}
-
-	//    cout << "END" <<endl;
 }
 
 //   Created by Jose Javier III
 void DoublyLinkedList::deletePatient()   // sets location to node to be edited
 {
-	string lName, fName;
-	cout << "Last Name: ";
-	cin >> lName;
-	cout << "First Name: ";
-	cin >> fName;
+	string phoneNumber;
+	
+	cout << "     Enter phone number: ";
+	cin >> phoneNumber;
+
+
+	if (!numberValidator(phoneNumber))
+	{
+		cout << "\n   !!!       Invalid Input. Please try again.       !!!\n" << endl;
+		cout << "     Phone Number: ";
+		cin >> phoneNumber;
+	}
+	
+
+	cout << "\n" << endl;
 
 	prevLoc = nullptr;
 	location = head;
 
 	if (location != nullptr) {
 		while (location != nullptr) {
-			if (location->lName == lName && location->fName == fName) {
+			if (location->phoneNumber == phoneNumber) {
 				removePatient(location, prevLoc);	//if found, call the removePatient method passing location of the trailer and current pointers
 				return;
 			}
@@ -324,22 +386,31 @@ void DoublyLinkedList::deletePatient()   // sets location to node to be edited
 	}
     
     // no patient was deleted
-    cout << "ERROR: Patient not found to delete. " << endl << endl;
+    cout << "\n   !!!       Error: Patient not found to delete.       !!!" << endl << endl;
 }
 
 void DoublyLinkedList::findPatient() { // sets location to node to be edited
-	string lName, fName;
-	cout << "Last Name: ";
-	cin >> lName;
-	cout << "First Name: ";
-	cin >> fName;
+	string phoneNumber;
+	
+
+	cout << "     Enter in the Patient's Phone Number: ";
+	cin >> phoneNumber;
+
+	if (!numberValidator(phoneNumber))
+	{
+		cout << "\n   !!!       Invalid Input. Please try again.       !!!\n" << endl;
+		cout << "     Phone Number: ";
+		cin >> phoneNumber;
+	}
+
+	cout << "\n" << endl;
 
 	prevLoc = nullptr;
 	location = head;
 
 	if (location != nullptr) {
 		while (location != nullptr) {
-			if (location->lName == lName && location->fName == fName) {
+			if (location->phoneNumber == phoneNumber) {
 				break;
 			}
 			prevLoc = location;
@@ -350,27 +421,55 @@ void DoublyLinkedList::findPatient() { // sets location to node to be edited
 
 // Done by: Megan Paffrath
 void DoublyLinkedList::editAppointmentForPatient(twilio::Twilio twilioObj, string fromNumber, bool testMode) { // currently only lets user add an appointment
-	cout << "Find patient in system to edit: " << endl;
-	findPatient();
-
-	if (location == nullptr) {
-		cout << "The Patient was not found." << endl;
+	if (head == nullptr)
+	{
+		cout << "\n   !!!       List is empty.       !!!\n" << endl;
+		return;
 	}
-	else {
-		cout << "Patient Found: " << location->fName << " " << location->lName << endl;
+
+	else
+	{
+		
+		cout << "\n   ------------------------------------------------" << endl;
+		cout << "   ---            Edit an Appointment           ---" << endl;
+		cout << "   ------------------------------------------------\n" << endl;
+		cout << "   !!!       NOTE: Unable to modify appointments.       !!!\n" << endl;
+
+		findPatient();
+
+		if (location == nullptr) {
+			cout << "\n   !!!       Patient not found.       !!!\n" << endl;
+		}
+		else {
+			cout << "     Patient Found: " << location->fName << " " << location->lName << endl << endl;
 
 
-		Appointment* newAppointment = new Appointment;
-		cout << "\tAdd Apt Date: ";
-		cin >> newAppointment->date;
-		cout << "\tAdd Apt Time: ";
-		cin >> newAppointment->time;
+			Appointment* newAppointment = new Appointment;
+			cout << "\tAdd Apt Date: ";
+			cin >> newAppointment->date;
+			while (!dateValidator(newAppointment->date)) { // while bad appt date
+				cout << "\n   !!!       Invalid input. Please try again.       !!!\n" << endl;
+				cout << "     Appointment Date (MM/DD/YY): ";
+				cin >> newAppointment->date;
+			}
 
-		location->appointments.push_back(*newAppointment);
+			cout << "\tAdd Apt Time: ";
+			cin >> newAppointment->time;
+			while (!timeValidator(newAppointment->time))
+			{
+				cout << "\n   !!!       Invalid input. Please try again.       !!!\n" << endl;
+				cout << "     Appointment Time (HH:MM[a or p]): ";
+				cin >> newAppointment->time;
+			}
 
-		sendMessage(location->phoneNumber, fromNumber, location->fName, newAppointment->date, newAppointment->time, twilioObj, testMode);
+			location->appointments.push_back(*newAppointment);
+
+			sendMessage(location->phoneNumber, fromNumber, location->fName, newAppointment->date, newAppointment->time, twilioObj, testMode);
+
+		}
 	}
 }
+
 
 // REMOVE: takes in pointers to the current location and previous location, if found, from findPatient() method
 // Done by: Megan Paffrath
@@ -381,16 +480,27 @@ void DoublyLinkedList::removePatient(Patient* patientLoc, Patient* trailerLoc) {
 		cout << "No patients to remove..\n";
 	}
 	else {
-		
 		//remove the node that was found
 		Patient* curr = patientLoc;	//set a temporary pointer to the location at which findPatient() location stopped
 		Patient* trail = trailerLoc;
 
-		cout << curr->fName << " " << curr->lName << " has been removed\n";
+		cout << "   ---       " << curr->fName << " " << curr->lName << " has been removed.       ---\n" << endl;
 		//relink our doubly link
-		trail->next = curr->next;
-		curr->prev = trail;
-		delete curr;
+
+		if (curr == head)
+		{
+			delete curr;
+			head = nullptr;
+			curr = nullptr;
+			trail = nullptr;
+		}
+
+		else
+		{
+			trail->next = curr->next;
+			curr->prev = trail;
+			delete curr;
+		}
 	}
 }
 
@@ -452,14 +562,14 @@ void DoublyLinkedList::removeOldAppointments() {
 
 // File Reader:
 void DoublyLinkedList::fileReader(bool& failPW_) {
-	string line, password;
+	string line, password, temp;
 	int phraseLength;
 
 	ifstream readFile("Patients.txt");
 
 	if (readFile.is_open()) {
 
-		cout << "Enter Password: ";
+		cout << "     Enter Password: ";
 		cin >> password;
 
 		getline(readFile, line); // ignore first line
@@ -474,6 +584,8 @@ void DoublyLinkedList::fileReader(bool& failPW_) {
 			failPW_ = true;
 			return;
 		}
+
+		cout << "\n   ---       Data decrypted.       ---\n" << endl;
 
 		while (true) {
 			string fName, lName, phone, aptInfo;
@@ -527,7 +639,13 @@ void DoublyLinkedList::fileReader(bool& failPW_) {
 	}
 
 	else {
-		cout << "Could not read from file.";
+		cout << "     Welcome to the Baraviath Group's Appointment Alert System!" << endl;
+		cout << "     This is a program used to keep track of appointment information" << endl;
+		cout << "     for patients, and notify them when appointments are imminent.\n" << endl;
+		cout << "     To get started, enter in any key and press Enter...\n" << endl;
+		cout << "     > ";
+		cin >> temp;
+		cout << "\n" << endl;
 	}
 }
 // File Writer:
@@ -549,7 +667,7 @@ void DoublyLinkedList::fileWriter(string password_) {
 		location = head;
 
 		if (head == nullptr) {
-			cout << "List is empty, nothing to write" << endl;
+			// cout << "List is empty, nothing to write" << endl;
 		}
 		else {
 			while (location != nullptr) {
@@ -567,7 +685,7 @@ void DoublyLinkedList::fileWriter(string password_) {
 				appendLine = appendLine + location->appointments[lastApt].date + " at " + location->appointments[lastApt].time + " ";
 
 
-				cout << "Appending: " << appendLine; // idea of what will be appended
+				//cout << "Appending: " << appendLine; // idea of what will be appended
 
 				encrypt(appendLine, password_);
 
@@ -579,7 +697,7 @@ void DoublyLinkedList::fileWriter(string password_) {
 		}
 	}
 	else {
-		cout << "Unable to open file to write to. " << endl;
+		cout << "\n   !!!       Error: Unable to save file.       !!!\n " << endl;
 	}
 
 }
