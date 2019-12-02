@@ -639,7 +639,7 @@ void DoublyLinkedList::fileReader(bool& failPW_) {
 	}
 
 	else {
-		cout << "     Welcome to the Baraviath Group's Appointment Alert System!" << endl;
+		cout << "\n     Welcome to the Baraviath Group's Appointment Alert System!" << endl;
 		cout << "     This is a program used to keep track of appointment information" << endl;
 		cout << "     for patients, and notify them when appointments are imminent.\n" << endl;
 		cout << "     To get started, enter in any key and press Enter...\n" << endl;

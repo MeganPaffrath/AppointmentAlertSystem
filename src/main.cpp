@@ -113,7 +113,7 @@ int main()
 				ourPatients.deletePatient();
 			}
 			else {
-				cout << "Invalid input. Try again" << endl;
+				cout << "\n   !!!       Error: Invalid input. Please try again.       !!!" << endl;
 			}
 		}
 
